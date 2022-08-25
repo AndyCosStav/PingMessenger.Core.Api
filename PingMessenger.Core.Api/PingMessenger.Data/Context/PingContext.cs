@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PingMessenger.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace PingMessenger.Data.Context
 {
-    public class PingContext : DbContext
+    public class PingContext : IdentityDbContext<IdentityUser>
     {
 
         public PingContext(DbContextOptions<PingContext> options)
@@ -11,14 +12,6 @@ namespace PingMessenger.Data.Context
         {
 
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-
-        }
-
-        public DbSet<User> Users { get; set; }
 
     }
 }
