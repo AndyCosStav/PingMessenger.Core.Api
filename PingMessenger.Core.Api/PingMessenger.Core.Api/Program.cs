@@ -35,7 +35,7 @@ builder.Services.AddCors(options =>
 
 //db
 builder.Services.AddDbContext<PingContext>(option =>
-  option.UseSqlServer(builder.Configuration.GetConnectionString("PingMessengerDbConnection"))); ;
+  option.UseSqlServer(builder.Configuration.GetConnectionString("PingMessengerDbConnection")));
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("ConnectionStrings"));
 

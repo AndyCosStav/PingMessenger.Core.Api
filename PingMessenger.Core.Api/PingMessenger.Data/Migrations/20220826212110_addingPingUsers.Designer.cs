@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PingMessenger.Data.Context;
 
@@ -11,9 +12,10 @@ using PingMessenger.Data.Context;
 namespace PingMessenger.Data.Migrations
 {
     [DbContext(typeof(PingContext))]
-    partial class PingContextModelSnapshot : ModelSnapshot
+    [Migration("20220826212110_addingPingUsers")]
+    partial class addingPingUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
