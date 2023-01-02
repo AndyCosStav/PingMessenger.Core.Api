@@ -12,8 +12,8 @@ using PingMessenger.Data.Context;
 namespace PingMessenger.Data.Migrations
 {
     [DbContext(typeof(PingContext))]
-    [Migration("20220803163959_firstmigration")]
-    partial class firstmigration
+    [Migration("20230102212800_removingPingUserIDs")]
+    partial class removingPingUserIDs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -222,6 +222,87 @@ namespace PingMessenger.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PingMessenger.Models.Models.AddressBook", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<Guid>("ContactId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AddressBook");
+                });
+
+            modelBuilder.Entity("PingMessenger.Models.Models.Conversation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.HasKey("Id")
+                        .HasName("PrimaryKey_ConversationId");
+
+                    b.ToTable("Conversations");
+                });
+
+            modelBuilder.Entity("PingMessenger.Models.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Conversation_Id")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Sender_Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("TimeSend")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id")
+                        .HasName("PrimaryKey_MessageId");
+
+                    b.HasIndex("Conversation_Id");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("PingMessenger.Models.Models.PingUser", b =>
+                {
+                    b.Property<Guid>("PingUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PingUserId");
+
+                    b.ToTable("PingUsers");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -271,6 +352,22 @@ namespace PingMessenger.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PingMessenger.Models.Models.Message", b =>
+                {
+                    b.HasOne("PingMessenger.Models.Models.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("Conversation_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+                });
+
+            modelBuilder.Entity("PingMessenger.Models.Models.Conversation", b =>
+                {
+                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }

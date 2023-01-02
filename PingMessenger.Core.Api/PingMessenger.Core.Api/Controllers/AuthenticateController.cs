@@ -80,6 +80,14 @@ namespace PingMessenger.Core.Api.Controllers
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            
+            //if success also add to pingUser table
+            _pingContext.PingUsers.Add(new PingMessenger.Models.Models.PingUser{
+                PingUserId= Guid.Parse(user.Id),
+                UserName = model.Username,
+                Email = model.Email});
+            
+            _pingContext.SaveChanges();
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }

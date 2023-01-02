@@ -18,9 +18,8 @@ namespace PingMessenger.Data.Context
 
         public DbSet<Message> Messages { get; set; }
 
-        public DbSet<Participants> Participants { get; set; }
-
         public DbSet<PingUser> PingUsers { get; set; }
+        public DbSet<AddressBook> AddressBook {get;set;}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -40,24 +39,6 @@ namespace PingMessenger.Data.Context
                 .HasForeignKey(c => c.Conversation_Id);
 
             });
-
-
-            builder.Entity<Participants>(entity =>
-           {
-               entity.HasKey(k => k.Id)
-               .HasName("PrimaryKey_ParticipantsId");
-
-               entity.HasOne(c => c.Conversation)
-               .WithMany(p => p.Participants)
-               .HasForeignKey(c => c.Conversation_Id);
-
-               entity.HasOne(c => c.PingUser)
-                    .WithMany(p => p.Participants)
-                    .HasForeignKey(c => c.Conversation_Id);
-
-           });
-
-
 
 
         }

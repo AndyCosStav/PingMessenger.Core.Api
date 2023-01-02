@@ -10,7 +10,6 @@ namespace PingMessenger.Models.Models
     {
         public int Id { get; set; }
         public ICollection<Message> Messages { get; set; }
-        public ICollection<Participants> Participants { get; set; }
 
     }
 }

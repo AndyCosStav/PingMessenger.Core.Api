@@ -220,6 +220,25 @@ namespace PingMessenger.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PingMessenger.Models.Models.AddressBook", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<Guid>("ContactId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AddressBook");
+                });
+
             modelBuilder.Entity("PingMessenger.Models.Models.Conversation", b =>
                 {
                     b.Property<int>("Id")
@@ -263,35 +282,11 @@ namespace PingMessenger.Data.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("PingMessenger.Models.Models.Participants", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Conversation_Id")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("PingUser_Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id")
-                        .HasName("PrimaryKey_ParticipantsId");
-
-                    b.HasIndex("Conversation_Id");
-
-                    b.ToTable("Participants");
-                });
-
             modelBuilder.Entity("PingMessenger.Models.Models.PingUser", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("PingUserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -301,7 +296,7 @@ namespace PingMessenger.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("PingUserId");
 
                     b.ToTable("PingUsers");
                 });
@@ -368,35 +363,9 @@ namespace PingMessenger.Data.Migrations
                     b.Navigation("Conversation");
                 });
 
-            modelBuilder.Entity("PingMessenger.Models.Models.Participants", b =>
-                {
-                    b.HasOne("PingMessenger.Models.Models.Conversation", "Conversation")
-                        .WithMany("Participants")
-                        .HasForeignKey("Conversation_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PingMessenger.Models.Models.PingUser", "PingUser")
-                        .WithMany("Participants")
-                        .HasForeignKey("Conversation_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("PingUser");
-                });
-
             modelBuilder.Entity("PingMessenger.Models.Models.Conversation", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("Participants");
-                });
-
-            modelBuilder.Entity("PingMessenger.Models.Models.PingUser", b =>
-                {
-                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }
