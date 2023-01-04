@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace PingMessenger.Core.Api.Controllers 
 {
+    [Authorize]
     public class AddressBookController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -26,6 +28,7 @@ namespace PingMessenger.Core.Api.Controllers
         }
 
         //method that returns user based on username
+        [Authorize]
         [HttpPost]
         [Route("searchUser")]
         public async Task<AddressBookSearchResponse?> searchUser([FromBody] string username)
@@ -46,9 +49,10 @@ namespace PingMessenger.Core.Api.Controllers
             return userToReturn; 
         }
 
+        [Authorize]
         [HttpGet]
         [Route("listContacts")]
-        public async Task<AddressBookListContacts> ListContacts(Guid ownerId)
+        public async Task<AddressBookListContacts> listContacts(Guid ownerId)
         {
             var addressBookListContacts = new AddressBookListContacts();
             addressBookListContacts.Contacts = new List<Contact>();
@@ -70,6 +74,7 @@ namespace PingMessenger.Core.Api.Controllers
             return addressBookListContacts;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("addToAddressBook")]
         public async Task<IActionResult> addToAddressBook(Guid ownerId, Guid contactId)

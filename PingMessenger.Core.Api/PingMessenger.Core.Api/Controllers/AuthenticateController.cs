@@ -92,6 +92,20 @@ namespace PingMessenger.Core.Api.Controllers
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
+        private JwtSecurityToken GetToken(List<Claim> authClaims)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                authClaims,
+                expires: DateTime.UtcNow.AddMinutes(10),
+                signingCredentials: signIn);
+
+            return token;
+        }
+
         //[HttpPost]
         //[Route("register-admin")]
         //public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
