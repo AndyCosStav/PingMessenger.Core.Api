@@ -52,13 +52,15 @@ namespace PingMessenger.Core.Api.Controllers
 
         public class ListContactRequest
         {
-            public Guid userId { get; set; }
+            public string userId { get; set; }
         }
+
         [Authorize]
-        [HttpGet]
+        [HttpPost]
         [Route("listContacts")]
-        public async Task<AddressBookListContacts> listContacts([FromBody]ListContactRequest req)
+        public async Task<AddressBookListContacts> listContacts([FromBody]string userID)
         {
+            var ownerID = Guid.Parse(userID);
             var addressBookListContacts = new AddressBookListContacts();
             addressBookListContacts.Contacts = new List<Contact>();
 
@@ -68,7 +70,7 @@ namespace PingMessenger.Core.Api.Controllers
             ab => ab.ContactId,
             pu => pu.PingUserId,
             (ab , pu ) => new {AddressBook = ab, PingUser = pu})
-            .Where(o => o.AddressBook.OwnerId == req.userId)
+            .Where(o => o.AddressBook.OwnerId == ownerID)
             .ToList();
 
             foreach(var con in contacts)
